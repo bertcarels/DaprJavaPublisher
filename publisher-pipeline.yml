@@ -8,12 +8,10 @@ trigger:
 
 pool:
  name: rancher-agent
- 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
+steps:
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    cd cicd
+    buildah  build --build-context src=../src -t javawhlsub:3.8.0-arm . -f Dockerfile_arm
+  
+  displayName: 'Build with buildah'
