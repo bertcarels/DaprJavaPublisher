@@ -18,5 +18,5 @@ steps:
   displayName: 'Run a multi-line script'
 - script: |
     cd cicd
-    buildah  build --build-context src=../src -t javawhlsub:3.8.0-arm . -f Dockerfile_arm
+    ./arm_build.sh 3.8.0-buildah
   displayName: 'Build with buildah'
