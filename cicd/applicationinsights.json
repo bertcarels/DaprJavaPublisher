@@ -1,0 +1,6 @@
+{
+  "connectionString": "InstrumentationKey=fdbca6b0-2271-4be4-add5-9d2907da497d;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/;ApplicationId=df7712f9-ab05-4aff-8878-5bf192b0b735",
+  "role": {
+    "name": "app4"
+  }
+}

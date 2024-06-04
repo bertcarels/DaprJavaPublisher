@@ -1,0 +1,204 @@
+# Default values for javadaprchart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: javawhlpub
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "3.5.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+appcode: whl
+bundle: 4225
+envcode2: dw
+envcode1: d
+workloadidentity:
+  enabled: false
+
+datasource: 
+  url:
+     server: mssql-sql-statefull-deploy.mssql:1433
+     database: whl0001
+  username: whl0001_login
+  password: Baz1nga!!!!      
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {
+    dapr.io/enabled: "true",
+    dapr.io/app-port: "8080"
+}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  appPort: 8080
+  daprPort: 3500
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  failureThreshold: 6
+  httpGet:
+    path: /actuator/health
+    port: http
+readinessProbe:
+  failureThreshold: 6
+  httpGet:
+    path: /actuator/health
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+applicationinsights:
+   enabled: true
+
+dapr:
+   enabled: true
+
+
+
+## - name: "redis"
+##    type: "pubsub.redis"
+##    metadata:
+##    - name: "redisHost"
+##      value: "redis-master.redis:6379"
+##    - name: "redisPassword"
+##      value: "4lM9p4PPh8"
+##    - name: "consumerID"
+##      value: "mygroup"
+##    - name: "enableTLS"
+##      value: "false"
+
+
+daprcomponents:
+  - name: "kafka"
+    type: "pubsub.kafka"
+    metadata:
+    - name: "brokers" # Required. Kafka broker connection setting
+      value: "kafka.kafka:9092"
+    - name: "consumerGroup" # Optional. Used for input bindings.
+      value: "ns-dw-whl-4225"
+    - name: "consumerID" # Optional. If not supplied, runtime will create one.
+      value: "channel1"
+    - name: "clientID" # Optional. Used as client tracing ID by Kafka brokers.
+      value: "javaapp001-javadaprchart"
+    - name: "authType" # Required.
+      value: "password"
+    - name: "saslUsername" # Required if authType is `password`.
+      value: "user1"
+    - name: "saslPassword" # Required if authType is `password`.
+      value: "dMBYhCIVee"
+#      secretKeyRef:
+#        name: kafka-secrets
+#        key: saslPasswordSecret
+    - name: "saslMechanism"
+      value: "SHA-256"
+    - name: "maxMessageBytes" # Optional.
+      value: "1024"
+    - name: "consumeRetryInterval" # Optional.
+      value: "200ms"
+    - name: "version" # Optional.
+      value: 2.0.0
+    - name: "disableTls" # Optional. Disable TLS. This is not safe for production!! You should read the `Mutual TLS` section for how to use TLS.
+      value: "true"
+    - name: schemaRegistryURL # Optional. When using Schema Registry Avro serialization/deserialization. The Schema Registry URL.
+      value: http://schema-registry.kafka:8081
+##    - name: schemaRegistryAPIKey # Optional. When using Schema Registry Avro serialization/deserialization. The Schema Registry API Key.
+##      value: XYAXXAZ
+##    - name: schemaRegistryAPISecret # Optional. When using Schema Registry Avro serialization/deserialization. The Schema Registry credentials API Secret.
+##      value: "ABCDEFGMEADFF"
+##    - name: schemaCachingEnabled # Optional. When using Schema Registry Avro serialization/deserialization. Enables caching for schemas.
+##      value: true
+##    - name: schemaLatestVersionCacheTTL # Optional. When using Schema Registry Avro serialization/deserialization. The TTL for schema caching when publishing a message with latest schema available.
+##      value: 5m
+      
+pubsub:
+  raw: RAW
+  format: Avro
+
+
+subscriptionId: subscriptionId
+tenantId: tenantId
+
+secretproviderclass:
+  enabled: true
+  secrets:
+  - secret: "redisPassword"
+    var: REDIS_PASSWORD
+    type: secret
+

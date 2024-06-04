@@ -1,0 +1,98 @@
+/*
+ *
+ * This generated file contains a sample Java application project to get you started.
+ * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.7/userguide/building_java_projects.html in the Gradle documentation.
+ */
+
+// build.gradle
+
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+configurations.runtimeOnly.setCanBeResolved(true)
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+   
+
+    // This dependency is used by the application.
+    // implementation libs.guava
+
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    implementation 'com.h2database:h2'
+    implementation 'org.liquibase:liquibase-core:4.27.0'
+    implementation 'io.dapr:dapr-sdk:1.11.0'
+
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.4.0.jre11'
+
+    implementation 'com.azure:azure-identity:1.9.0'
+    implementation 'com.microsoft.azure:msal4j:1.13.8'
+    implementation 'com.azure:azure-core-http-netty:1.13.11'
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    runtimeOnly 'com.microsoft.azure:applicationinsights-agent:3.5.2' 
+
+     // Use JUnit test framework.
+    testImplementation libs.junit
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2'
+
+    //testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+}
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
+}
+
+
+test {
+}
+
+task copyApplicationInsightsDependency(type: Copy) {
+    from configurations.runtimeOnly.filter { it.name.contains('insights')}
+    into "${buildDir}/runtimeDependencies"
+}
+
+jar {
+    from sourceSets.main.output
+    exclude { fileTree("${buildDir}/runtimeDependencies")}
+}
+
+
+jar.dependsOn(copyApplicationInsightsDependency)
+
+// build.gradle
+
+//tasks.named('bootJar') {
+//    mainClassName = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
+//}
+
+//bootJar {
+//    archiveBaseName = 'demo'
+//    archiveVersion = '0.0.1-SNAPSHOT'
+//    mainClassName = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
+//}

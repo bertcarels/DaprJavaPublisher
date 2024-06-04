@@ -1,0 +1,10 @@
+# Ignore Gradle project-specific cache directory
+src/.gradle
+.gradle 
+.DS_STORE
+
+# Ignore Gradle build output directory
+src/build
+src/app/build
+cicd/applicationinsights.log
+

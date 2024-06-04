@@ -1,0 +1,20 @@
+{{- if .Values.dapr.enabled }}
+{{ $componentPrefix := include "javadaprchart.fullname" . }}
+{{- range $daprcomponents := .Values.daprcomponents }}
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: {{ $componentPrefix }}-{{ .name }}
+spec:
+   type: {{ .type }}
+   version: v1
+   metadata:
+      {{- range $metadata := .metadata }}
+      - name: {{ .name }}
+        value: {{ tpl .value $ }}
+      {{- end }}
+scopes:
+- {{ $componentPrefix }}  
+---      
+{{- end}}
+{{- end}}

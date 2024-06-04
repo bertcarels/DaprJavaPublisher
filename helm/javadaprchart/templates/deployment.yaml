@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "javadaprchart.fullname" . }}
+  labels:
+    {{- include "javadaprchart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "javadaprchart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        rollme: {{ randAlphaNum 16 | quote }}
+        {{- if .Values.dapr.enabled }}
+        dapr.io/config: "{{ include "javadaprchart.fullname" . }}-daprconfig"
+        dapr.io/app-id: "{{ include "javadaprchart.fullname" . }}"
+        {{- end}}
+      labels:
+        {{- include "javadaprchart.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.workloadidentity.enabled }}
+        azure.workload.identity/use: "true"
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "javadaprchart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          command: ["/bin/bash", "-c"]
+          args:
+          - |-
+            sleep 5
+            cd /usr/src/app
+            ./run.sh
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.appPort }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ include "javadaprchart.fullname" . }}-conf
+              mountPath: /usr/src/app/run.sh
+              subPath: run.sh
+            - name: {{ include "javadaprchart.fullname" . }}-conf
+              mountPath: /usr/src/app/application.properties
+              subPath: application.properties
+            - name: {{ include "javadaprchart.fullname" . }}-conf
+              mountPath: /usr/src/app/applicationinsights.json
+              subPath: applicationinsights.json    
+            {{- if .Values.secretproviderclass.enabled }}
+            - name: secret-store
+              mountPath: /mnt/secret-store
+              readOnly: true
+            {{- end }}  
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: {{ include "javadaprchart.fullname" . }}-conf
+        configMap: 
+          name: {{ include "javadaprchart.fullname" . }}-conf
+          defaultMode: 0754
+      {{- if .Values.secretproviderclass.enabled }}
+      - name: secret-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+             secretProviderClass: {{ include "javadaprchart.fullname" .}}-spc
+      {{- end }}

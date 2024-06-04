@@ -1,0 +1,13 @@
+{{- if .Values.dapr.enabled }}
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: {{ include "javadaprchart.fullname" . }}-daprconfig
+  labels:
+    {{- include "javadaprchart.labels" . | nindent 4 }}
+spec:
+   accessControl:
+      defaultAction: allow
+   tracing:
+      samplingRate: "1"    
+{{- end }}

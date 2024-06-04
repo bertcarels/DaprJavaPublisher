@@ -1,0 +1,45 @@
+
+
+#####   env:
+#####          - name: AZURE_HTTP_LOG_DETAIL_LEVEL
+#####            value: BODY_AND_HEADERS  
+#####          - name: AZURE_LOG_LEVEL
+#####            value: VERBOSE  
+
+image:
+  repository: javawhlpub
+  tag: "3.5.0-arm"
+
+workloadidentity:
+  enabled: false
+  clientid: c3c16221-055f-439c-b5dc-0eeaa20d435e
+
+
+dapr:
+  enabled: true 
+
+datasource: 
+  url:
+     server: mssql-sql-statefull-deploy.mssql:1433
+     database: whl0001
+     authentication: ActiveDirectoryDefault
+  driverclassname: com.microsoft.sqlserver.jdbc.SQLServerDriver   
+  identity: false
+  username: whl0001
+  password: Baz1nga!!!!      
+
+logging:
+   level: INFO  
+
+###datasource: 
+###  url:
+###     server: mssql-sql-statefull-deploy.mssql:1433
+###     database: whl0001
+###  username: whl0001
+###  password: Baz1nga!!!!      
+###  driverclassname: com.microsoft.sqlserver.jdbc.SQLServerDriver   
+
+
+
+secretproviderclass:
+   enabled: false
