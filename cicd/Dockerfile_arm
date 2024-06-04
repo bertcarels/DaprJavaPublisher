@@ -5,8 +5,8 @@ FROM builder as build
 
 COPY --from=src . /workspace
 
-RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
-USER gradle
+###RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
+###USER gradle
 RUN cd /workspace && gradle build
 
 FROM amazoncorretto:17.0.11
