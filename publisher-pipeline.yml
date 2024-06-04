@@ -13,5 +13,4 @@ steps:
 - script: |
     cd cicd
     buildah  build --build-context src=../src -t javawhlsub:3.8.0-arm . -f Dockerfile_arm
-  
   displayName: 'Build with buildah'
