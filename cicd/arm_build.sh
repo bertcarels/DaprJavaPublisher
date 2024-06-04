@@ -6,4 +6,4 @@ if [ "$#" -ne 1 ]; then
 fi
 
 
-buildah build --build-context src=../src -t javawhlpub:$1 . -f Dockerfile_arm  
+buildah build --build-context src=../src -t javawhlpub:$1  -f Dockerfile_arm .  
