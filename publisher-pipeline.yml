@@ -6,6 +6,9 @@
 trigger:
 - main
 
+pool:
+ name: rancher-agent
+ 
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
