@@ -15,7 +15,5 @@ WORKDIR /usr/src/app
 COPY --from=build /workspace/app/build/libs/app.jar ./app.jar
 COPY --from=build /workspace/app/build/runtimeDependencies/applicationinsights-agent*.jar applicationinsights-agent.jar
 COPY run.sh /usr/src/app/run.sh
-COPY mssql-jdbc-fatjar-1.0-SNAPSHOT-all.jar /usr/src/app/mssql.jar
-COPY mssql-jdbc-fatjar-v34.jar /usr/src/app/mssql-jdbc-fatjar-v34.jar
 CMD  ["sh", "-c", "./run.sh"]
 EXPOSE 8080/tcp
