@@ -4,7 +4,7 @@ RUN update-ca-certificates
 
 FROM builder as build
 
-COPY . /workspace
+COPY --from=src . /workspace
 
 RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
 USER gradle
