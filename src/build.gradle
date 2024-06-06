@@ -49,7 +49,7 @@ allprojects {
 
 
     group = 'com.kaboutersoft.group.gtsciais.demo'
-    version = System.getenv('CURRENT_VERSION') ?: project.findProperty('currentVersion') ?: '1.0-SNAPSHOT'
+    version = System.getenv('GITVERSION_FULLSEMVER') ?: project.findProperty('currentVersion') ?: '1.0-SNAPSHOT'
     status = "release"
     repositories {
         maven {
