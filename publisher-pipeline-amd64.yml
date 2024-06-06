@@ -20,12 +20,10 @@ steps:
     versionSpec: '5.12.0'
     updateAssemblyInfo: true
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-    gitversion /showConfig
+    dotnet-gitversion /showConfig
     cd cicd
     ls -latR
-  displayName: 'Run a multi-line script'
+  displayName: 'Show Gitversion Config'
 - script: |
     cd cicd
     ./build.sh 3.8.0-buildah
