@@ -9,7 +9,16 @@ trigger:
 pool:
  name: rancher-agent
 
+
+variables:
+  GitVersion.SemVer: ''
+
 steps:
+- task: UseGitVersion@5
+  displayName: gitversion
+  inputs:
+    versionSpec: '5.x'
+    updateAssemblyInfo: true
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
