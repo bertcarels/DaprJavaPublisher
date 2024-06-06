@@ -8,3 +8,5 @@ src/build
 src/app/build
 cicd/applicationinsights.log
 
+src/.scannerwork/.sonar_lock
+src/.scannerwork/scanner-report/analysis.log
