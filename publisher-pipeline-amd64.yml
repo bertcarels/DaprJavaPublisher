@@ -32,7 +32,7 @@ steps:
     cd cicd
     ls -latR
     echo $(GitVersion.Semver)
-    echo $GITVERSION_FullSemVer
+    echo $GITVERSION_FULLSEMVER
   displayName: 'Show Gitversion Config'
 - script: |
     cd cicd
