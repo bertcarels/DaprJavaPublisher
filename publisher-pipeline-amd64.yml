@@ -26,6 +26,7 @@ steps:
     set
     cd cicd
     ls -latR
+    echo ${GitVersion.Semver}
   displayName: 'Show Gitversion Config'
 - script: |
     cd cicd
