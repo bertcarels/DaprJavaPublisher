@@ -23,7 +23,7 @@ steps:
     updateAssemblyInfo: true
 - script: |
     dotnet-gitversion /showConfig
-    dotnet-gitversion
+    dotnet-gitversion /output buildserver
     set
     cd cicd
     ls -latR
