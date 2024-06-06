@@ -17,7 +17,7 @@ variables:
 
 
 steps: 
-- task: GitVersion@5 
+- task: gitversion/setup@1
   inputs: 
      runtime: 'core' 
      configFilePath: 'GitVersion.yml' # Optional: Path to GitVersion configuration file 
