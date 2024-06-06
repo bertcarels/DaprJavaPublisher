@@ -21,6 +21,7 @@ steps:
     updateAssemblyInfo: true
 - script: |
     dotnet-gitversion /showConfig
+    set
     cd cicd
     ls -latR
   displayName: 'Show Gitversion Config'
