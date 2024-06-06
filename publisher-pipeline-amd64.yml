@@ -18,10 +18,9 @@ variables:
 
 steps: 
 - task: gitversion/setup@1
-  inputs: 
-     runtime: 'core' 
-     configFilePath: 'GitVersion.yml' # Optional: Path to GitVersion configuration file 
-     updateAssemblyInfo: true # Optional: Automatically update the AssemblyInfo files with version information
+  inputs:
+    versionSpec: '5.12.0'
+    updateAssemblyInfo: true
 - script: |
     dotnet-gitversion /showConfig
     set
