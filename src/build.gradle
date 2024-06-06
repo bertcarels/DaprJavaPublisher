@@ -1,0 +1,121 @@
+/*
+ * Copyright (C) 2013 JFrog Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'application'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id("com.jfrog.artifactory") version "5.+"
+    id "org.sonarqube" version "5.0.0.4638"
+}
+
+
+sonar {
+  properties {
+    property "sonar.projectKey", "my:project"
+    property "sonar.organization", "myOrganization"
+    property "sonar.host.url", "http://localhost:9000"
+  }
+}
+configurations.runtimeOnly.setCanBeResolved(true)
+
+
+def javaProjects() {
+    subprojects.findAll { new File(it.projectDir, 'src').directory }
+}
+
+
+allprojects {
+    apply plugin: 'com.jfrog.artifactory'
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    
+
+
+    group = 'com.kaboutersoft.group.gtsciais.demo'
+    version = System.getenv('CURRENT_VERSION') ?: project.findProperty('currentVersion') ?: '1.0-SNAPSHOT'
+    status = "release"
+    repositories {
+        maven {
+            url "https://jfrog-platform-artifactory-nginx.jfrog-platform/artifactory/kab-maven"
+        }
+    }
+}
+
+
+
+
+// Setting this property to true will make the artifactoryPublish task
+// skip this module (in our case, the root module):
+artifactoryPublish.skip = true
+
+configure(javaProjects()) {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    dependencies {
+        testImplementation 'junit:junit:4.7'
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact(file("$rootDir/gradle.properties"))
+                artifact bootJar
+            }
+        }
+    }
+}
+
+artifactory {
+    clientConfig.setIncludeEnvVars(true)
+    clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new java.util.Date().toString())
+    clientConfig.info.setBuildName('Gradle-JavaPublisher')
+    clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
+  //  clientConfig.info.setProject('artifactory-build-info') 
+    clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
+    clientConfig.setInsecureTls(true)
+
+    contextUrl = 'https://jfrog-platform-artifactory-nginx.jfrog-platform/artifactory'
+    publish {
+        repository {
+            repoKey = 'kab-maven-local' // The Artifactory repository key to publish to
+            username = "${artifactory_user}" // The publisher user name
+            password = "${artifactory_password}" // The publisher password
+            // This is an optional section for configuring Ivy publication (when publishIvy = true).
+            ivy {
+              ivyLayout = '[organization]/[module]/ivy-[revision].xml'
+              artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+              mavenCompatible = true //Convert any dots in an [organization] layout value to path separators, similar to Maven's groupId-to-path conversion. True if not specified
+            }
+        }
+        defaults {
+            // Reference to Gradle publications defined in the build script.
+            // This is how we tell the Artifactory Plugin which artifacts should be
+            // published to Artifactory.
+            publications('mavenJava')
+            publishArtifacts = true
+            // Properties to be attached to the published artifacts.
+            properties = ['qa.level': 'basic', 'dev.team' : 'core']
+            publishPom = true // Publish generated POM files to Artifactory (true by default)
+            publishIvy = true // Publish generated Ivy descriptor files to Artifactory (true by default)
+        }
+    }
+}

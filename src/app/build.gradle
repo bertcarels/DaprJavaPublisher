@@ -6,20 +6,9 @@
 
 // build.gradle
 
-plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
-    id 'application'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-}
 
-configurations.runtimeOnly.setCanBeResolved(true)
+//artifactoryPublish.skip=false
 
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-}
 
 dependencies {
    
@@ -28,13 +17,13 @@ dependencies {
     // implementation libs.guava
 
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.4' // specify the version
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4' // specify the version
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.4' // specify the version
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-    implementation 'com.h2database:h2'
+    implementation 'com.h2database:h2:2.1.214' // specify the version
     implementation 'org.liquibase:liquibase-core:4.27.0'
     implementation 'io.dapr:dapr-sdk:1.11.0'
 
@@ -44,32 +33,31 @@ dependencies {
     implementation 'com.microsoft.azure:msal4j:1.13.8'
     implementation 'com.azure:azure-core-http-netty:1.13.11'
 
-    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools:3.2.4'
     
     runtimeOnly 'com.microsoft.azure:applicationinsights-agent:3.5.2' 
 
      // Use JUnit test framework.
-    testImplementation libs.junit
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+   // testImplementation libs.junit
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.4' // specify the version
     testImplementation 'com.h2database:h2'
+
+    // Explicitly add the JUnit dependency
+   // testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
     //testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 }
 
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
 
 application {
-    // Define the main class for the application.
-    mainClass = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
+   mainClass = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
 }
+
+configurations.runtimeOnly.setCanBeResolved(true)
 
 
 test {
+    useJUnitPlatform()
 }
 
 task copyApplicationInsightsDependency(type: Copy) {
@@ -78,21 +66,26 @@ task copyApplicationInsightsDependency(type: Copy) {
 }
 
 jar {
+   
     from sourceSets.main.output
     exclude { fileTree("${buildDir}/runtimeDependencies")}
 }
 
-
 jar.dependsOn(copyApplicationInsightsDependency)
 
-// build.gradle
 
-//tasks.named('bootJar') {
-//    mainClassName = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
-//}
 
-//bootJar {
-//    archiveBaseName = 'demo'
-//    archiveVersion = '0.0.1-SNAPSHOT'
-//    mainClassName = 'com.kaboutersoft.group.gtsciais.demo.DemoApplication'
-//}
+bootJar {
+    archiveVersion.set('')
+    archiveClassifier.set('')
+}
+
+build.dependsOn bootJar
+
+
+
+task printVersion {
+    doLast {
+        println "Current project version: $version"
+    }
+}

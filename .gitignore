@@ -10,3 +10,5 @@ cicd/applicationinsights.log
 
 src/.scannerwork/.sonar_lock
 src/.scannerwork/scanner-report/analysis.log
+src/5.2.0/build-info-extractor-gradle-5.2.0-uber.jar
+src/5.2.0/gradle.init
