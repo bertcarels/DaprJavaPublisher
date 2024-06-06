@@ -1,4 +1,5 @@
 # Starter pipeline
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -14,10 +15,9 @@ variables:
   GitVersion.SemVer: ''
 
 steps:
-- task: UseGitVersion@5
-  displayName: gitversion
+- task: gitversion/setup@1
   inputs:
-    versionSpec: '5.x'
+    versionSpec: '5.12.0'
     updateAssemblyInfo: true
 - script: |
     echo Add other tasks to build, test, and deploy your project.
