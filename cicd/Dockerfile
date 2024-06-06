@@ -8,7 +8,7 @@ COPY --from=src . /workspace
 
 RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
 USER gradle
-RUN cd /workspace && gradle build && gradle artifactoryPublish
+RUN cd /workspace && gradle printVersion && gradle build && gradle artifactoryPublish
 
 FROM amazoncorretto:17.0.11
 WORKDIR /usr/src/app
