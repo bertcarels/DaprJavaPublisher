@@ -29,12 +29,8 @@ steps:
   displayName: 'Set GitVersion Variables'    
 - script: |
     set
-    cd cicd
-    ls -latR
-    echo $(GitVersion.Semver)
-    echo $GITVERSION_FULLSEMVER
-  displayName: 'Show Gitversion Config'
+  displayName: 'Show Gitversion Variables'  
 - script: |
     cd cicd
-    ./build.sh $GITVERSION_FULLSEMVER
+    ./build.sh $GITVERSION_SEMVER-$GITVERSION_BUILDMETADATA
   displayName: 'Build with buildah'
