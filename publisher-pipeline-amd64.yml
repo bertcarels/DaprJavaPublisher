@@ -36,5 +36,5 @@ steps:
   displayName: 'Show Gitversion Config'
 - script: |
     cd cicd
-    ./build.sh 3.8.0-buildah
+    ./build.sh $GITVERSION_FULLSEMVER
   displayName: 'Build with buildah'
