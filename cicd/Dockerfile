@@ -1,4 +1,4 @@
-FROM gradle:8.7.0-jdk-alpine as builder
+FROM jfrog-platform-artifactory-nginx.jfrog-platform/kab-docker-remote/gradle:8.7.0-jdk-alpine as builder
 USER root
 RUN update-ca-certificates
 
@@ -10,7 +10,7 @@ RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
 USER gradle
 RUN cd /workspace && gradle printVersion && gradle build && gradle artifactoryPublish
 
-FROM amazoncorretto:17.0.11
+FROM jfrog-platform-artifactory-nginx.jfrog-platform/kab-docker-remote/amazoncorretto:17.0.11
 WORKDIR /usr/src/app
 COPY --from=build /workspace/app/build/libs/app.jar ./app.jar
 COPY --from=build /workspace/app/build/runtimeDependencies/applicationinsights-agent*.jar applicationinsights-agent.jar
