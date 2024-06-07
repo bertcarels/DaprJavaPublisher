@@ -9,6 +9,7 @@ COPY --from=src . /workspace
 RUN chown -R gradle:gradle /workspace/* && chown -R gradle:gradle /workspace/.
 USER gradle
 RUN cd /workspace && gradle printVersion && gradle build && gradle artifactoryPublish
+RUN gradle sonar -Dsonar.token=sqa_e72746626a781f6c9f08496eee930d299057ff6e
 
 FROM jfrog-platform-artifactory-nginx.jfrog-platform/kab-docker-remote/amazoncorretto:17.0.11
 WORKDIR /usr/src/app

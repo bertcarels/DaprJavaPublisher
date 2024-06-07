@@ -26,9 +26,10 @@ plugins {
 
 sonar {
   properties {
-    property "sonar.projectKey", "my:project"
+    property "sonar.projectKey", System.getenv('BUILD_DEFINITIONNAME') ?: project.findProperty('buildName') ?: 'Gradle-Build'
     property "sonar.organization", "myOrganization"
-    property "sonar.host.url", "http://localhost:9000"
+    property "sonar.host.url", "http://sonarqube-sonarqube.sonarqube:9000"
+    property "sonar.projectName", "JavaPublisher"
   }
 }
 configurations.runtimeOnly.setCanBeResolved(true)
