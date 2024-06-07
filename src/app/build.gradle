@@ -87,5 +87,6 @@ build.dependsOn bootJar
 task printVersion {
     doLast {
         println "Current project version: $version"
+      
     }
 }

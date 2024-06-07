@@ -89,6 +89,10 @@ artifactory {
     clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new java.util.Date().toString())
     clientConfig.info.setBuildName(   System.getenv('BUILD_DEFINITIONNAME') ?: project.findProperty('buildName') ?: 'Gradle-Build')
     clientConfig.info.setBuildNumber( System.getenv('BUILD_BUILDID') ?: project.findProperty('buildId') ?: '1.0-SNAPSHOT')
+
+    println "Build Name: ${clientConfig.info.getBuildName()}"
+    println "Build Number: ${clientConfig.info.getBuildNumber()}"
+    
   //  clientConfig.info.setProject('artifactory-build-info') 
     clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
     clientConfig.setInsecureTls(true)
