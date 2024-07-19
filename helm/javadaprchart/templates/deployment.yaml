@@ -4,6 +4,8 @@ metadata:
   name: {{ include "javadaprchart.fullname" . }}
   labels:
     {{- include "javadaprchart.labels" . | nindent 4 }}
+    app: app0001
+    version: v1
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -11,6 +13,8 @@ spec:
   selector:
     matchLabels:
       {{- include "javadaprchart.selectorLabels" . | nindent 6 }}
+      app: app0001
+      version: v1
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -21,6 +25,7 @@ spec:
         {{- if .Values.dapr.enabled }}
         dapr.io/config: "{{ include "javadaprchart.fullname" . }}-daprconfig"
         dapr.io/app-id: "{{ include "javadaprchart.fullname" . }}"
+        dapr.io/sidecar-listen-addresses: 0.0.0.0
         {{- end}}
       labels:
         {{- include "javadaprchart.labels" . | nindent 8 }}
@@ -30,6 +35,8 @@ spec:
         {{- if .Values.workloadidentity.enabled }}
         azure.workload.identity/use: "true"
         {{- end }}
+        app: app0001
+        version: v1
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

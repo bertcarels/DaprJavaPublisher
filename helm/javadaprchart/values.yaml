@@ -187,9 +187,15 @@ daprcomponents:
 ##    - name: schemaLatestVersionCacheTTL # Optional. When using Schema Registry Avro serialization/deserialization. The TTL for schema caching when publishing a message with latest schema available.
 ##      value: 5m
       
+##
+
+###pubsub:
+###  raw: RAW
+###  format: Avro
+
 pubsub:
-  raw: RAW
-  format: Avro
+  raw: 
+  format: 
 
 
 subscriptionId: subscriptionId

@@ -6,6 +6,7 @@ src/.gradle
 # Ignore Gradle build output directory
 src/build
 src/app/build
+src/app/bin
 cicd/applicationinsights.log
 
 src/.scannerwork/.sonar_lock

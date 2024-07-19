@@ -13,3 +13,5 @@ spec:
       name: http
   selector:
     {{- include "javadaprchart.selectorLabels" . | nindent 4 }}
+    app: app0001
+    version: v1
